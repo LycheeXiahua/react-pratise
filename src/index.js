@@ -2,30 +2,39 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-class Square extends React.Component {
-    // constructor(props){
-    //     super(props) //固定的开头
-    //     this.state = {
-    //         value: null
-    //     }
-    // }
+// class Square extends React.Component {
+//     // constructor(props){
+//     //     super(props) //固定的开头
+//     //     this.state = {
+//     //         value: null
+//     //     }
+//     // }
 
-    render() {
-        return (
-            <button 
-                className="square"
-                onClick={
-                    () => {
-                        this.props.onClick()
-                        console.log('click', this.props.value)
-                    }
-                }
-            >
-                {this.props.value}
-            </button>
-        );
-    }
+//     render() {
+//         return (
+//             <button 
+//                 className="square"
+//                 onClick={
+//                     () => {this.props.onClick() }
+//                 }
+//             >
+//                 {this.props.value}
+//             </button>
+//         );
+//     }
+// }
+
+//只包含一个redner方法、没有state的组件，可以使用函数组件。
+//以下改写 Square 组件：
+
+function Square(props){
+    return(
+        <button className="square" onClick={props.onClick}>
+            {props.value}
+        </button>
+    )
 }
+
 
 class Board extends React.Component {
     constructor(props){
@@ -34,6 +43,20 @@ class Board extends React.Component {
             squares: Array(9).fill(null)
         }
     }
+
+    handleClick(i){
+        const squares = this.state.squares.slice(); //拷贝了一个数组
+        squares[i] = 'X' //修改新数组，而不是原数组
+        this.setState({
+            squares:squares  //赋值新数组
+        })
+    }
+
+    //不直接修改原数据，方便实现撤销和恢复功能。 —— 那如果我不需要这个功能？
+    //虽然UIDP确实有这个需求。
+
+    //作用：可以轻松确定数据是否发生了改变，从而确定组件是否需要重新渲染 —— 我想起UIDP中那个，需要 watch+computed 配合判断是否改变数据的场景
+    //这是性能优化的一个方向 —— 配合 shouldComponentUpdate 使用
 
     renderSquare(i) {
         return (
