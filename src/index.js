@@ -20,6 +20,8 @@ class Board extends React.Component {
 
     handleClick(i){
         const squares = this.state.squares.slice(); 
+        //已经有子或已有胜者，不再执行
+        if(calculateWinner(squares) || squares[i]) return;
         squares[i] = this.state.xIsNext?'X':'O'
         this.setState({
             squares:squares, 
